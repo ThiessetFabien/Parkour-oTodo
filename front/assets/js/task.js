@@ -49,6 +49,9 @@ export function insertTaskInHTML(taskData) {
 
   // On insère le HTML de la tâche dans la page
   document.querySelector(".tasks").append(newTask);
+
+  console.log("form ");
+  document.getElementById("create-task").reset();
 }
 
 export async function handleCreateForm(event) {
@@ -85,7 +88,6 @@ async function handleDeleteButton(event) {
     });
     // On supprime l'élément dans la page HTML
     document.querySelector(`.tasks [data-id="${taskId}"]`).remove();
-
     return httpResponse.ok;
   } catch (error) {
     console.log(error);
