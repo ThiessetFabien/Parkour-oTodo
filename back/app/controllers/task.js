@@ -3,9 +3,7 @@ import { Task } from "../models/Task.js";
 export async function getAllTasks(req, res) {
   // Récupérer la liste des tâches
   try {
-    const tasks = await Task.findAll({
-      order: [["created_at", "DESC"]],
-    });
+    const tasks = await Task.findAll();
     console.log('tasks ', tasks);
     res.json(tasks);
   } catch (error) {
