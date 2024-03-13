@@ -22,11 +22,41 @@ export async function insertTasks(req, res) {
       const error = name
         ? "Invalid type: 'name' must be a string."
         : "Missing body parameter: 'title'.";
-      return res.status(400).json({ error });
+      return res.status(400).json({ error: `${error}` });
     }
 
     const createTask = await Task.create({ name });
     res.status(400).json(createTask);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Unexpected server error. Please try again later." });
+  }
+}
+
+export async function updateTask(req, res) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Task ID must be valide integer" });
+    }
+
+    const { name } = req.body;
+    if (!name || typeof name !== "string") {
+      const error = name
+        ? "Invalid type: 'name' must be a string."
+        : "Missing body parameter: 'title'.";
+      return res.status(400).json({ error: `${error}` });
+    }
+
+    const updateTask = await Task.update({ name: name }, { where: { id: id } });
+
+    if (updateTask === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(202).json(updateTask);
   } catch (error) {
     console.error(error);
     res

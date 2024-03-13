@@ -21,3 +21,31 @@ Content-Type: application/json
 { 
     "name": { "name": "error" } 
 }
+
+### PATCH
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+{
+    "name": "test"
+}
+
+### PATCH
+PATCH http://localhost:3000/tasks/3
+Content-Type: application/json
+{
+    "name": "test"
+}
+
+### PATCH ERROR type number
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+{
+    "name": 1
+}
+
+### PATCH ERROR type object
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+{ 
+    "name": { "name": "error" } 
+}
