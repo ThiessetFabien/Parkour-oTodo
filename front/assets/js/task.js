@@ -65,9 +65,6 @@ export async function handleCreateForm(event) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(taskFormData),
   });
-  if (!httpResponse.ok) {
-    throw new Error("Une erreur est survenue");
-  }
 
   const createdTask = await httpResponse.json();
   // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;)
@@ -75,15 +72,25 @@ export async function handleCreateForm(event) {
   insertTaskInHTML(createdTask);
 }
 
-function handleDeleteButton(event) {
+async function handleDeleteButton(event) {
   // On récupère l'ID de l'élément à supprimer
   const taskHtmlElement = event.currentTarget.closest(".task");
   const taskId = parseInt(taskHtmlElement.dataset.id);
   console.log(taskId);
 
   // On envoie la requete de suppression à l'API
+  try {
+    const httpResponse = await fetch(`${apiBaseUrl}/tasks/${taskId}`, {
+      method: "DELETE",
+    });
+    // On supprime l'élément dans la page HTML
+    document.querySelector(`.tasks [data-id="${taskId}"]`).remove();
 
-  // On supprime l'élément dans la page HTML
+    return httpResponse.ok;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 function handleEditButton(event) {
@@ -117,7 +124,7 @@ async function handleEditForm(event) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: tagName,
-        id: taskId
+        id: taskId,
       }),
     });
     if (!httpResponse.ok) {
