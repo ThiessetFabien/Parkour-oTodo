@@ -11,6 +11,7 @@ router.post("/tasks", taskController.insertTasks);
 
 // Route pour modifier une tache
 router.patch("/tasks/:id", taskController.updateTask);
+
 // Route pour supprimer une tache
 router.delete("/tasks/:id", taskController.deleteTask);
 

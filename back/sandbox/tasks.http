@@ -49,3 +49,6 @@ Content-Type: application/json
 { 
     "name": { "name": "error" } 
 }
+
+### DELETE
+DELETE http://localhost:3000/tasks/1

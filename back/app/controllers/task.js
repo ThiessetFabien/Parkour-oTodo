@@ -50,7 +50,7 @@ export async function updateTask(req, res) {
       return res.status(400).json({ error: `${error}` });
     }
 
-    const updateTask = await Task.update({ name: name }, { where: { id: id } });
+    const updateTask = await Task.update({ "name": name }, { where: { "id": id } });
 
     if (updateTask === 0) {
       return res.status(404).json({ error: "Task not found" });
@@ -68,6 +68,7 @@ export async function updateTask(req, res) {
 export async function deleteTask(req, res) {
   try {
     const id = parseInt(req.params.id, 10);
+    console.log('id ', id);
     if (isNaN(id)) {
       return res.status(400).json({ error: "Task ID must be valide integer" });
     }
@@ -80,7 +81,7 @@ export async function deleteTask(req, res) {
         .json({ error: "List not found. Please verify the provided ID." });
     }
 
-    await Task.destroy();
+    await task.destroy();
     res.status(204).end();
   } catch (error) {
     res
