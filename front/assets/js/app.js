@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   // Ajout de donner de tests. [TODO] A SUPPRIMER lorsqu'on aura fait les appels API
-  taskManager.insertTaskInHTML({ id: 1, name: "Créer le HTML" });
-  taskManager.insertTaskInHTML({ id: 2, name: "Créer le CSS" });
+  // taskManager.insertTaskInHTML({ id: 1, name: "Créer le HTML" });
+  // taskManager.insertTaskInHTML({ id: 2, name: "Créer le CSS" });
 
   // Fetch et afficher les tâches
   await taskManager.fetchAndInsertTasks();
