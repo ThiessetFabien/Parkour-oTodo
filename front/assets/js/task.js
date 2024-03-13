@@ -65,12 +65,14 @@ export async function handleCreateForm(event) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(taskFormData),
   });
-  
+  if (!httpResponse.ok) {
+    throw new Error("Une erreur est survenue");
+  }
+
   const createdTask = await httpResponse.json();
   // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;)
   // en utilisant la valeur de retour de l'API
   insertTaskInHTML(createdTask);
-
 }
 
 function handleDeleteButton(event) {
@@ -93,26 +95,44 @@ function handleEditButton(event) {
   taskHtmlElement.querySelector(".task__name").style.display = "none";
 }
 
-function handleEditForm(event) {
-  // Bloquer l'envoie du formulaire
-  event.preventDefault();
+async function handleEditForm(event) {
+  try {
+    // Bloquer l'envoie du formulaire
+    event.preventDefault();
 
-  // On récupère l'élément HTML complet de la tâche à modifier
-  const taskHtmlElement = event.currentTarget.closest(".task");
+    // On récupère l'élément HTML complet de la tâche à modifier
+    const taskHtmlElement = event.currentTarget.closest(".task");
 
-  // Récupérer les données du formulaire
-  const editTaskFormData = new FormData(event.currentTarget);
+    // Récupérer les données du formulaire
+    const editTaskFormData = new FormData(event.currentTarget);
 
-  console.log("name", editTaskFormData.get("name")); // Le nouveau nom récupéré
-  // const tagName = editTaskFormData.get("name");
-  console.log("id", editTaskFormData.get("id")); // L'ID de la tâche à modifier
-  // const taskId = editTaskFormData.get("id");
+    console.log("name", editTaskFormData.get("name")); // Le nouveau nom récupéré
+    const tagName = editTaskFormData.get("name");
+    console.log("id", editTaskFormData.get("id")); // L'ID de la tâche à modifier
+    const taskId = editTaskFormData.get("id");
 
-  // Envoyer les données à l'API
+    // Envoyer les données à l'API
+    const httpResponse = await fetch(`${apiBaseUrl}/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: tagName,
+        id: taskId
+      }),
+    });
+    if (!httpResponse.ok) {
+      throw new Error("Une erreur est survenue");
+    }
 
-  // Après confirmation de l'API modifier le nom de la tâche dans le span.task__name
-  // On affiche l'input de modification
-  taskHtmlElement.querySelector(".task__edit-form").style.display = "none";
-  // On masque le titre
-  taskHtmlElement.querySelector(".task__name").style.display = "block";
+    const updateTask = await httpResponse.json();
+    console.log("updateTask ", updateTask);
+    // Après confirmation de l'API modifier le nom de la tâche dans le span.task__name
+    taskHtmlElement.querySelector(".task__name").textContent = tagName;
+    // On affiche l'input de modification
+    taskHtmlElement.querySelector(".task__edit-form").style.display = "none";
+    // On masque le titre
+    taskHtmlElement.querySelector(".task__name").style.display = "block";
+  } catch (error) {
+    console.error(error);
+  }
 }
