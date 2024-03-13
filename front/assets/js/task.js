@@ -12,7 +12,6 @@ export async function fetchAndInsertTasks() {
   // Boucler sur la liste des tâches
   tasks.forEach((task) => {
     // Pour chaque tâche, l'insérer dans la page à l'aide de la fonction `insertTaskInHTML()`
-    console.log('task ', task);
     insertTaskInHTML(task);
   });
 }
@@ -52,7 +51,7 @@ export function insertTaskInHTML(taskData) {
   document.querySelector(".tasks").append(newTask);
 }
 
-export function handleCreateForm(event) {
+export async function handleCreateForm(event) {
   // Bloquer l'envoie du formulaire
   event.preventDefault();
 
@@ -61,9 +60,17 @@ export function handleCreateForm(event) {
   console.log(taskFormData);
 
   // Envoyer les données à l'API
-
+  const httpResponse = await fetch(`${apiBaseUrl}/tasks/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(taskFormData),
+  });
+  
+  const createdTask = await httpResponse.json();
   // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;)
   // en utilisant la valeur de retour de l'API
+  insertTaskInHTML(createdTask);
+
 }
 
 function handleDeleteButton(event) {
@@ -96,13 +103,14 @@ function handleEditForm(event) {
   // Récupérer les données du formulaire
   const editTaskFormData = new FormData(event.currentTarget);
 
-  console.log(editTaskFormData.get("name")); // Le nouveau nom récupéré
-  console.log(editTaskFormData.get("id")); // L'ID de la tâche à modifier
+  console.log("name", editTaskFormData.get("name")); // Le nouveau nom récupéré
+  // const tagName = editTaskFormData.get("name");
+  console.log("id", editTaskFormData.get("id")); // L'ID de la tâche à modifier
+  // const taskId = editTaskFormData.get("id");
 
   // Envoyer les données à l'API
 
   // Après confirmation de l'API modifier le nom de la tâche dans le span.task__name
-
   // On affiche l'input de modification
   taskHtmlElement.querySelector(".task__edit-form").style.display = "none";
   // On masque le titre
