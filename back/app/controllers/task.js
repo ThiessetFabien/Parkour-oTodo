@@ -26,7 +26,7 @@ export async function insertTasks(req, res) {
     }
 
     const createTask = await Task.create({ name });
-    res.status(400).json(createTask);
+    res.json(createTask);
   } catch (error) {
     console.error(error);
     res
