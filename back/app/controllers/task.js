@@ -64,3 +64,27 @@ export async function updateTask(req, res) {
       .json({ error: "Unexpected server error. Please try again later." });
   }
 }
+
+export async function deleteTask(req, res) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Task ID must be valide integer" });
+    }
+
+    const task = await Task.findByPk(id);
+
+    if (!task) {
+      return res
+        .status(404)
+        .json({ error: "List not found. Please verify the provided ID." });
+    }
+
+    await Task.destroy();
+    res.status(204).end();
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Unexpected server error. Please try again later." });
+  }
+}
